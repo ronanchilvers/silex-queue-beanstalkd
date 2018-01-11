@@ -11,5 +11,13 @@
             "name": "Ronan Chilvers",
             "email": "ronan@thelittledot.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Ronanchilvers\\Silex\\Queue\\": "src/"
+        }
+    },
+    "suggest": {
+        "knplabs/console-service-provider": "@2.1 If you want to use the consume CLI command"
+    }
 }

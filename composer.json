@@ -1,0 +1,15 @@
+{
+    "name": "ronanchilvers/silex-queue-beanstalkd",
+    "description": "Simple queue mechanism for silex using beanstalkd",
+    "type": "library",
+    "require": {
+        "pda/pheanstalk": "^3.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ronan Chilvers",
+            "email": "ronan@thelittledot.com"
+        }
+    ]
+}

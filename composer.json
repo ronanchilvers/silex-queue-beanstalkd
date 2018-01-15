@@ -3,7 +3,8 @@
     "description": "Simple queue mechanism for silex using beanstalkd",
     "type": "library",
     "require": {
-        "pda/pheanstalk": "^3.1"
+        "pda/pheanstalk": "^3.1",
+        "silex/silex": "^2.2"
     },
     "license": "MIT",
     "authors": [

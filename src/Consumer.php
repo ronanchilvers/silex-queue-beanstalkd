@@ -58,11 +58,20 @@ class Consumer extends Connection
         $output->writeln('Starting queue watch');
         $this->connection()->watch($queue);
         $iterations = 0;
-        $output->writeln('Waiting for jobs');
+        if ($output->isDebug()) {
+            $output->writeln('Waiting for jobs');
+        }
         while (true) {
             $job = $this->connection()->reserve($timeout);
             if (false === $job) {
-                $output->writeln('Looping');
+                if ($output->isDebug()) {
+                    $output->writeln(
+                        sprintf(
+                            'Timeout of %d seconds exceeded - looping',
+                            $timeout
+                        )
+                    );
+                }
                 continue;
             }
             $output->writeln('Dispatching job id ' . $job->getId());
@@ -73,15 +82,17 @@ class Consumer extends Connection
                 $iterations++;
                 continue;
             }
-            $output->writeln(
-                sprintf(
-                    'Job : %d, service \'%s\', method \'%s\', args \'%s\'',
-                    $job->getId(),
-                    $message->getService(),
-                    $message->getMethod(),
-                    json_encode($message->getArgs())
-                )
-            );
+            if ($output->isDebug()) {
+                $output->writeln(
+                    sprintf(
+                        'Job : %d, service \'%s\', method \'%s\', args \'%s\'',
+                        $job->getId(),
+                        $message->getService(),
+                        $message->getMethod(),
+                        json_encode($message->getArgs())
+                    )
+                );
+            }
             $status = $this->dispatch(
                 $message,
                 $output

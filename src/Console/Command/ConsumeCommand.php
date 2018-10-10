@@ -29,6 +29,13 @@ class ConsumeCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'A queue to consume from'
             )
+            ->addOption(
+                'timeout',
+                't',
+                InputOption::VALUE_REQUIRED,
+                'How long in seconds to wait for a job before looping',
+                5
+            )
             ;
     }
 
@@ -38,6 +45,7 @@ class ConsumeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $queue = $input->getOption('queue');
+        $timeout = $input->getOption('timeout');
         if (!is_null($queue)) {
             $output->writeln('Consuming queue ' . $queue);
         } else {
@@ -45,7 +53,11 @@ class ConsumeCommand extends Command
         }
         $app = $this->getSilexApplication();
         $consumer = $app['queue.consumer'];
-        $consumer->listen($output, $queue);
+        $consumer->listen(
+            $output,
+            $queue,
+            $timeout
+        );
     }
 
 }

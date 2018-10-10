@@ -39,7 +39,7 @@ class Consumer extends Connection
      * @param string $queue
      * @author Ronan Chilvers <ronan@d3r.com>
      */
-    public function listen(OutputInterface $output = null, $queue = null)
+    public function listen(OutputInterface $output = null, $queue = null, $timeout = 5)
     {
         if (is_null($queue)) {
             $queue = $this->getOption('default.queue', 'messages');
@@ -59,7 +59,12 @@ class Consumer extends Connection
         $this->connection()->watch($queue);
         $iterations = 0;
         $output->writeln('Waiting for jobs');
-        while ($job = $this->connection()->reserve()) {
+        while (true) {
+            $job = $this->connection()->reserve($timeout);
+            if (false === $job) {
+                $output->writeln('Looping');
+                continue;
+            }
             $output->writeln('Dispatching job id ' . $job->getId());
             $message = unserialize($job->getData());
             if (!$message instanceof Message) {
